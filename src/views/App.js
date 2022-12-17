@@ -23,6 +23,8 @@ import PaymentResolve from "../pages/PaymentResolve";
 import PaymentSuccess from "../pages/PaymentResponse/PaymentSuccess";
 import PaymentFail from "../pages/PaymentResponse/PaymentFail";
 import Address from "../pages/Address";
+import AddressAdd from "../components/Address/AddressAdd";
+import AddressEdit from "../components/Address/AddressEdit";
 
 function App() {
   return (
@@ -54,13 +56,22 @@ function App() {
                 <Route path=":id" element={<ProductByCategory />} />
               </Route>
             </Route>
+
             <Route path="/product-detail">
               <Route path=":id" element={<ProductDetail />} />
             </Route>
+
             <Route path="/contact" element={<Contact />} />
+
             <Route path="/account">
               <Route index element={<Account />} />
-              <Route path="addresses" element={<Address />} />
+              <Route path="address">
+                <Route index element={<Address />} />
+                <Route path="add" element={<AddressAdd />} />
+                <Route path="edit">
+                  <Route path=":id" element={<AddressEdit />} />
+                </Route>
+              </Route>
             </Route>
             <Route path="/order-detail">
               <Route path=":id" element={<OrderDetail />} />

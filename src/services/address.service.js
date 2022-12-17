@@ -55,10 +55,28 @@ const getAddressByID = (id) => {
     });
 };
 
+const createAddress = (data) => {
+  return axios
+    .post(`${configAPI.baseUrlApi}/api/v1/address`, data)
+    .then((res) => {
+      return res.data;
+    });
+};
+
+const updateAddress = (data, id) => {
+  return axios
+    .put(`${configAPI.baseUrlApi}/api/v1/address/${id}`, data)
+    .then((res) => {
+      return res.data;
+    });
+};
+
 export const AddressService = {
   getProvince,
   getDistrict,
   getWard,
   getAddressByUserID,
   getAddressByID,
+  createAddress,
+  updateAddress,
 };

@@ -40,7 +40,7 @@ const SidebarCustomer = () => {
               KHOẢN
             </Link>
             <Link
-              to={`/account/addresses`}
+              to={`/account/address`}
               className="nav-link d-flex justify-content-start align-items-center"
             >
               <FaAddressBook className="fa fa-user mr-2"></FaAddressBook> DANH
