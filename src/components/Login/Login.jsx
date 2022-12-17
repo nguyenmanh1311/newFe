@@ -4,6 +4,7 @@ import logo from "../../assets/images/logo/baloshop-w.png";
 import { AuthService } from "../../services/auth.service";
 import "../Login/Login.scss";
 import swal from "sweetalert";
+import swal2 from "sweetalert2";
 
 const Login = () => {
   const loginRef = useRef(null);
@@ -17,25 +18,55 @@ const Login = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [email, setEmail] = useState("");
 
+  const [isChecked, setIsChecked] = useState(false);
+
   const navigate = useNavigate();
   const loginOnclick = async () => {
     await AuthService.login(usernameLogin, passwordLogin).then((response) => {
+      console.log(response);
+      if (
+        response.status === "UNAUTHORIZED" ||
+        response.status === "BAD_REQUEST"
+      ) {
+        swal2.fire(
+          "Thông báo",
+          "Thông tin đăng nhập không chính xác!",
+          "warning"
+        );
+      }
+      if (!response.data.enable) {
+        {
+          localStorage.clear();
+          swal2.fire("Thông báo", "Tài khoản đã dừng hoạt động!", "error");
+        }
+      }
       if (localStorage.getItem("accessToken")) {
         navigate("/");
       }
     });
   };
   const registerOnClick = () => {
-    AuthService.register(phone, passwordRegister, confirmPassword, email).then(
-      (res) => {
+    if (isChecked) {
+      AuthService.register(
+        phone,
+        passwordRegister,
+        confirmPassword,
+        email
+      ).then((res) => {
         if (res.status === "OK") {
-          swal("Thông báo", res.message, "suceess");
+          swal2.fire("Thông báo", res.message, "success");
           navigate("/login");
         } else {
-          swal("Thông báo", res.message, "error");
+          swal2.fire("Thông báo", res.message, "error");
         }
-      }
-    );
+      });
+    } else {
+      swal2.fire("Thông báo", "Bạn phải đồng ý với điều khoản", "warning");
+    }
+  };
+
+  const agree = () => {
+    setIsChecked(!isChecked);
   };
 
   const register = () => {
@@ -136,7 +167,7 @@ const Login = () => {
                 id="remember"
                 type="checkbox"
                 className="check-box"
-                required
+                onChange={agree}
               />
               <label style={{ marginBottom: 0 }} htmlFor="remember">
                 Tôi đồng ý với các chính sách và điều khoản

@@ -104,15 +104,6 @@ const Search = () => {
                   })}
                 </div>
                 <div className="pages">
-                  <p className="loadMore">
-                    <a href="#" className="btn btn-primary btn-lg">
-                      <FaChevronDown
-                        className="fa fa-chevron-down"
-                        style={{ marginBottom: "-2px" }}
-                      ></FaChevronDown>{" "}
-                      Hiển thị thêm
-                    </a>
-                  </p>
                   <nav
                     aria-label="Page navigation example"
                     className="d-flex justify-content-center"

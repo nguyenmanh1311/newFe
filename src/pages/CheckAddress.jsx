@@ -11,21 +11,19 @@ import { ImEye } from "react-icons/im";
 import { Link } from "react-router-dom";
 import { GrPrevious } from "react-icons/gr";
 import { GrNext } from "react-icons/gr";
-import SidebarPayment from "../components/Sidebar/SidebarPayment";
 import { AddressService } from "../services/address.service";
 
 const CheckAddress = () => {
-  const [allProvince, setAllProvince] = useState([]);
+  const [address, setAddress] = useState();
   useEffect(() => {
+    const userId = JSON.parse(localStorage.getItem("userId"));
     let isFetched = true;
-    const fetchAllProvince = () => {
-      AddressService.getProvince().then((res) => {
-        if (isFetched) {
-          setAllProvince(res.data);
-        }
+    const fetchAddress = () => {
+      AddressService.getAddressByUserID(userId).then((res) => {
+        setAddress(res?.data[0]);
       });
     };
-    fetchAllProvince();
+    fetchAddress();
     return () => {
       isFetched = false;
     };
@@ -49,7 +47,7 @@ const CheckAddress = () => {
                   </ol>
                 </nav>
               </div>
-              <div id="checkout" className="col-lg-9">
+              <div id="checkout" className="col-lg-12">
                 <div className="box">
                   <form method="get">
                     <h1>Địa chỉ</h1>
@@ -65,21 +63,21 @@ const CheckAddress = () => {
                       </Link>
 
                       <Link
-                        to={"/delivery-method"}
+                        to={""}
                         className="nav-link flex-sm-fill text-sm-center disabled"
                       >
                         <ImTruck className="fa fa-truck"> </ImTruck>
                         <div>Phương thức vận chuyển</div>
                       </Link>
                       <Link
-                        to={"/payment-method"}
+                        to={""}
                         className="nav-link flex-sm-fill text-sm-center disabled"
                       >
                         <MdPayment className="fa fa-money"> </MdPayment>
                         <div>Phương thức thanh toán</div>
                       </Link>
                       <Link
-                        to={"/order-review"}
+                        to={""}
                         className="nav-link flex-sm-fill text-sm-center disabled"
                       >
                         <ImEye className="fa fa-eye"> </ImEye>
@@ -94,6 +92,7 @@ const CheckAddress = () => {
                             id="fullname"
                             type="text"
                             className="form-control"
+                            readOnly
                           />
                         </div>
                       </div>
@@ -105,6 +104,7 @@ const CheckAddress = () => {
                             id="phone"
                             type="text"
                             className="form-control"
+                            readOnly
                           />
                         </div>
                       </div>
@@ -115,42 +115,60 @@ const CheckAddress = () => {
                             id="email"
                             type="text"
                             className="form-control"
+                            readOnly
                           />
                         </div>
                       </div>
-                      <div className="col-md-3">
+                      <div className="col-md-12">
                         <div className="form-group">
                           <label htmlFor="street">Số nhà, tên đường</label>
                           <input
                             id="street"
                             type="text"
                             className="form-control"
+                            defaultValue={address?.addressLine}
+                            readOnly
                           />
                         </div>
                       </div>
-                      <div className="col-md-3">
+                      <div className="col-md-4">
                         <div className="form-group">
-                          <label htmlFor="state">Xã / Phường</label>
-                          <select id="state" className="form-control"></select>
+                          <label htmlFor="ward">Xã / Phường</label>
+                          <input
+                            id="ward"
+                            type="text"
+                            className="form-control"
+                            defaultValue={address?.ward}
+                            readOnly
+                          />
                         </div>
                       </div>
-                      <div className="col-md-3">
+                      <div className="col-md-4">
                         <div className="form-group">
-                          <label htmlFor="state">Quận / Huyện</label>
-                          <select id="state" className="form-control"></select>
+                          <label htmlFor="district">Quận / Huyện</label>
+                          <input
+                            id="district"
+                            type="text"
+                            className="form-control"
+                            defaultValue={address?.district}
+                            readOnly
+                          />
                         </div>
                       </div>
-                      <div className="col-md-3">
+                      <div className="col-md-4">
                         <div className="form-group">
                           <label htmlFor="province">Thành phố / Tỉnh</label>
-                          <select
+                          <input
                             id="province"
+                            type="text"
                             className="form-control"
-                          ></select>
+                            defaultValue={address?.province}
+                            readOnly
+                          />
                         </div>
                       </div>
                     </div>
-                    <div className="box-footer d-flex justify-content-between">
+                    <div className="d-flex justify-content-between">
                       <Link
                         to={`/basket`}
                         className="btn btn-outline-secondary"

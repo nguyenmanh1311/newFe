@@ -9,18 +9,33 @@ import { Link } from "react-router-dom";
 import Footer from "../components/Footer/Footer";
 import Header from "../components/Header/Header";
 import { CartService } from "../services/cart.service";
+import { InvoiceService } from "../services/invoice.service";
+import swal from "sweetalert2";
+
 const OrderReview = () => {
   const commas = (str) => {
     return str.replace(/.(?=(?:.{3})+$)/g, "$&.");
   };
   const [cartDetail, setCartDetail] = useState([]);
+  const [cartId, setCartId] = useState("");
   let total = 0;
+
+  const clickPlaceOrder = () => {
+    InvoiceService.createInvoiceByCartId(cartId).then((res) => {
+      if (res.status === "OK") {
+        swal.fire("Thông báo", "Đặt hàng thành công", "success");
+      } else {
+        swal.fire("Thông báo", "Đặt hàng thất bại", "success");
+      }
+    });
+  };
 
   useEffect(() => {
     const userId = JSON.parse(localStorage.getItem("userId"));
     let isFetched = true;
     const fetchCart = () => {
       CartService.getCartId(userId).then((res) => {
+        setCartId(res.data.id);
         if (isFetched) {
           CartService.getAllCartDetailByCartID(res.data.id).then((res) => {
             if (isFetched) {
@@ -55,7 +70,7 @@ const OrderReview = () => {
                   </ol>
                 </nav>
               </div>
-              <div id="checkout" className="col-lg-9">
+              <div id="checkout" className="col-lg-12">
                 <div className="box">
                   <form method="get" action="checkout4.html">
                     <h1>Tổng quan đơn hàng</h1>
@@ -142,11 +157,6 @@ const OrderReview = () => {
                               </tr>
                             );
                           })}
-                          <tr>
-                            <th colSpan="5">Chi phí vận chuyển</th>
-                            <th colSpan="2">{commas(50000 + "") + "₫"}</th>
-                          </tr>
-                          ;
                         </tbody>
                         <tfoot>
                           {total !== 0 && (
@@ -158,7 +168,7 @@ const OrderReview = () => {
                         </tfoot>
                       </table>
                     </div>
-                    <div className="box-footer d-flex justify-content-between">
+                    <div className="d-flex justify-content-between">
                       <Link
                         to={`/payment-method`}
                         className="btn btn-outline-secondary"
@@ -170,7 +180,11 @@ const OrderReview = () => {
                         Quay lại trang chọn phương thức thanh toán
                       </Link>
                       <Link to="">
-                        <button type="submit" className="btn btn-primary">
+                        <button
+                          type="submit"
+                          className="btn btn-primary"
+                          onClick={clickPlaceOrder}
+                        >
                           Đặt hàng{" "}
                           <GrNext
                             className="fa fa-chevron-right"

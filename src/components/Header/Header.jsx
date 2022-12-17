@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../../styles/Style.scss";
-import logo from "../../assets/images/logo/baloshop-b-l.png";
+import logo from "../../assets/images/logo/baloshop-black.png";
 
 import { FaShoppingCart } from "react-icons/fa";
 import { BsSearch } from "react-icons/bs";
@@ -10,18 +10,33 @@ import { CategoryService } from "../../services/category.service";
 import { BrandService } from "../../services/brand.service";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import swal2 from "sweetalert2";
+import { UserService } from "../../services/user.service";
 
 const Header = () => {
   const navigate = useNavigate();
   const [allBrand, setAllBrand] = useState([]);
   const [allCategory, setAllCategory] = useState([]);
   const [searchInput, setSearchInput] = useState([]);
+  const [user, setUser] = useState([]);
+  const userId = JSON.parse(localStorage.getItem("userId"));
 
   const logoutOnclick = async () => {
-    if (window.confirm("Bạn có muốn thoát không?")) {
-      localStorage.clear();
-      window.location.reload();
-    }
+    swal2
+      .fire({
+        title: "Bạn có chắc không?",
+        showDenyButton: true,
+        confirmButtonText: "Có",
+        denyButtonText: "Không",
+      })
+      .then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          localStorage.clear();
+          window.location.reload();
+        } else if (result.isDenied) {
+        }
+      });
   };
 
   const searchItems = (searchValue) => {
@@ -63,6 +78,16 @@ const Header = () => {
       });
     };
 
+    const fetchUser = () => {
+      UserService.getUserByUserID(userId).then((res) => {
+        if (isFetched) {
+          if (res.data != null) {
+            setUser(res.data);
+          }
+        }
+      });
+    };
+    fetchUser();
     fetchshowAllBrand();
     fetchshowAllCategory();
     return () => {
@@ -86,7 +111,7 @@ const Header = () => {
           <div id="navigation" className="collapse navbar-collapse">
             <ul className="navbar-nav mr-auto">
               <li className="nav-item">
-                <Link to="/" className="nav-link active">
+                <Link to="/" className="nav-link ">
                   Trang chủ
                 </Link>
               </li>
@@ -98,28 +123,29 @@ const Header = () => {
                   data-hover="dropdown"
                   data-delay="200"
                   className="dropdown-toggle nav-link"
-                  id="dropdownMenuLink"
                 >
                   Sản phẩm<b className="caret"></b>
                 </Link>
-                <div className="dropdown-menu megamenu menu-product dropdown">
-                  <div className="row">
-                    <ul className="list-unstyled">
-                      {allCategory.map((item) => {
-                        return (
-                          <li className="nav-item" key={item.id}>
-                            <Link
-                              to={`/product/category/${item.id}`}
-                              className="nav-link"
-                            >
-                              {item.name}
-                            </Link>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </div>
-                </div>
+                <ul className="dropdown-menu menu-product megamenu  ">
+                  <li>
+                    <div className="row">
+                      <ul className="list-unstyled">
+                        {allCategory.map((item) => {
+                          return (
+                            <li className="nav-item" key={item.id}>
+                              <Link
+                                to={`/product/category/${item.id}`}
+                                className="nav-link"
+                              >
+                                {item.name}
+                              </Link>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  </li>
+                </ul>
               </li>
               <li className="nav-item dropdown menu-large">
                 <Link
@@ -131,7 +157,7 @@ const Header = () => {
                 >
                   Thương Hiệu<b className="caret"></b>
                 </Link>
-                <ul className="dropdown-menu menu-brand megamenu">
+                <ul className="dropdown-menu menu-brand megamenu ">
                   <li>
                     <div className="row">
                       <ul className="list-unstyled">
@@ -185,7 +211,7 @@ const Header = () => {
                 id="basket-overview"
                 className="navbar-collapse collapse d-none d-lg-block"
               >
-                <Link to={`/basket`} className="btn btn-primary navbar-btn">
+                <Link to={`/basket`} className="btn btn-secondary navbar-btn">
                   <FaShoppingCart
                     className="fa fa-shopping-cart"
                     style={{ marginBottom: "-2px" }}
@@ -223,19 +249,23 @@ const Header = () => {
               {localStorage.getItem("accessToken") && (
                 <div className="text-white d-flex align-items-center">
                   <div className="dropdown">
-                    <button
-                      className="btn btn-secondary "
-                      type="button"
+                    <div
+                      className="rounded-circle"
                       id="dropdownMenuButton"
                       data-toggle="dropdown"
                       aria-haspopup="true"
                       aria-expanded="false"
                     >
-                      <GoPerson
-                        className="fa fa-person"
-                        style={{ marginBottom: "-2px" }}
+                      <img
+                        src={
+                          "http://localhost:8080/api/v1/image_product/" +
+                          user.photo
+                        }
+                        class="rounded-circle "
+                        style={{ height: "30px" }}
+                        alt="..."
                       />
-                    </button>
+                    </div>
                     <div
                       className="dropdown-menu"
                       aria-labelledby="dropdownMenuButton"
@@ -252,7 +282,6 @@ const Header = () => {
                       </Link>
                     </div>
                   </div>
-                  <span style={{ marginLeft: "30px" }}>Chào bạn</span>
                 </div>
               )}
             </div>

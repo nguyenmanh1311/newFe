@@ -6,6 +6,13 @@ const getAllProduct = () => {
     return res.data;
   });
 };
+const getAllTopSelling = () => {
+  return axios
+    .get(configAPI.baseUrlApi + "/api/v1/product/topselling")
+    .then((res) => {
+      return res.data;
+    });
+};
 
 const get10ProductFeature = () => {
   return axios.get(configAPI.baseUrlApi + "/api/v1/product").then((res) => {
@@ -59,6 +66,25 @@ const getProductByCategory = (id) => {
     });
 };
 
+const getProductByCateIdAndBrandId = (input) => {
+  return axios
+    .post(
+      `${configAPI.baseUrlApi}/api/v1/product/search/bycateandbranch`,
+      input
+    )
+    .then((res) => {
+      return res.data;
+    });
+};
+
+const get4RelateProduct = (idProduct) => {
+  return axios
+    .get(`${configAPI.baseUrlApi}/api/v1/product/top4related/${idProduct}`)
+    .then((res) => {
+      return res.data;
+    });
+};
+
 export const ProductService = {
   getAllProduct,
   get8ProductNew,
@@ -68,4 +94,7 @@ export const ProductService = {
   getProductByCategory,
   get10ProductFeature,
   getProductByName,
+  getProductByCateIdAndBrandId,
+  get4RelateProduct,
+  getAllTopSelling,
 };

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import "../styles/Style.scss";
 import Footer from "../components/Footer/Footer";
 import Header from "../components/Header/Header";
@@ -16,7 +16,7 @@ import { ImGooglePlus } from "react-icons/im";
 import { SiGmail } from "react-icons/si";
 
 import Carousel from "nuka-carousel/lib/carousel";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -24,6 +24,7 @@ const ProductDetail = () => {
   const [product, setProduct] = useState([]);
   const [productRelattionship, setProductRelationship] = useState([]);
   const quantityRef = useRef();
+  const navigate = useNavigate();
 
   const commas = (str) => {
     return str.replace(/.(?=(?:.{3})+$)/g, "$&.");
@@ -31,22 +32,41 @@ const ProductDetail = () => {
 
   const AddToCart = () => {
     const userId = JSON.parse(localStorage.getItem("userId"));
-    CartService.getCartId(userId).then((res) => {
-      const data = {
-        cartId: res.data.id,
-        productId: id,
-        quantity: Number(quantityRef.current.value),
-      };
-      CartService.addToCart(data).then((res) => {
-        if (res.status === "OK") {
-          swal(
-            "Thông báo",
-            "Thêm sản phẩm vào giỏ hàng thành công!",
-            "success"
-          );
+    if (userId === null) {
+      Swal.fire({
+        title: "🔊 Bạn phải đăng nhập để thêm sản phẩm vào giỏ hàng!!!",
+        showDenyButton: true,
+        confirmButtonText: "Đăng nhập",
+        denyButtonText: "Tiếp tục xem sản phẩm",
+        customClass: {
+          actions: "my-actions",
+          confirmButton: "order-2",
+          denyButton: "order-3",
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login");
+        } else if (result.isDenied) {
         }
       });
-    });
+    } else {
+      CartService.getCartId(userId).then((res) => {
+        const data = {
+          cartId: res.data.id,
+          productId: id,
+          quantity: Number(quantityRef.current.value),
+        };
+        CartService.addToCart(data).then((res) => {
+          if (res.status === "OK") {
+            Swal.fire(
+              "Thông báo",
+              "Thêm sản phẩm vào giỏ hàng thành công!",
+              "success"
+            );
+          }
+        });
+      });
+    }
   };
 
   useEffect(() => {
@@ -58,6 +78,7 @@ const ProductDetail = () => {
         }
       });
     };
+
     const fetchImage = () => {
       ImageService.getAllImageByProductId(id).then((res) => {
         if (isFetched) {
@@ -65,13 +86,15 @@ const ProductDetail = () => {
         }
       });
     };
+
     const fetchProductRelationship = () => {
-      ProductService.getProductSameCate().then((res) => {
+      ProductService.get4RelateProduct(id).then((res) => {
         if (isFetched) {
           setProductRelationship(res.data);
         }
       });
     };
+
     window.scrollTo(0, 0);
     fetchImage();
     fetchProductRelationship();
@@ -224,7 +247,7 @@ const ProductDetail = () => {
                   <h3>Sản phẩm liên quan</h3>
                 </div>
                 <div className="row same-height-row">
-                  {productRelattionship.map((item) => {
+                  {productRelattionship?.map((item) => {
                     return (
                       <div className="col-md-3 col-sm-6">
                         <Gallery

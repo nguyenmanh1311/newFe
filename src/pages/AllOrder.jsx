@@ -1,10 +1,32 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import Footer from "../components/Footer/Footer";
 import Header from "../components/Header/Header";
 import SidebarCustomer from "../components/Sidebar/SidebarCustomer";
+import { InvoiceService } from "../services/invoice.service";
 
 const AllOrder = () => {
+  const [allInvoice, setAllInvoice] = useState([]);
+  const commas = (str) => {
+    return str.replace(/.(?=(?:.{3})+$)/g, "$&.");
+  };
+
+  useEffect(() => {
+    const userId = JSON.parse(localStorage.getItem("userId"));
+    let isFetched = true;
+    const fetchAllInvoice = () => {
+      InvoiceService.getAllInvoiceByUserId(userId).then((res) => {
+        if (isFetched) {
+          setAllInvoice(res.data);
+        }
+      });
+    };
+    fetchAllInvoice();
+    return () => {
+      isFetched = false;
+    };
+  }, []);
   return (
     <>
       <Header />
@@ -25,7 +47,7 @@ const AllOrder = () => {
                 </nav>
               </div>
               <SidebarCustomer />
-              <div id="customer-orders" className="col-lg-9">
+              <div id="customer-orders" className="col-lg-9 mt-1">
                 <div className="box">
                   <h1>Tất cả đơn hàng</h1>
                   <p className="lead">
@@ -38,104 +60,68 @@ const AllOrder = () => {
                   <hr />
                   <div className="table-responsive">
                     <table className="table table-hover">
-                      <thead>
+                      <thead style={{ textAlign: "center" }}>
                         <tr>
                           <th>Mã đặt hàng</th>
                           <th>Ngày đặt hàng</th>
                           <th>Tổng tiền</th>
                           <th>Trạng thái</th>
+                          <th>Thanh toán</th>
                           <th>Xem chi tiết</th>
                         </tr>
                       </thead>
-                      <tbody>
-                        <tr>
-                          <th># 1735</th>
-                          <td>22/06/2013</td>
-                          <td>$ 150.00</td>
-                          <td>
-                            <span className="badge badge-info">
-                              Đang giao hàng
-                            </span>
-                          </td>
-                          <td>
-                            <Link
-                              to={`/order-detail`}
-                              className="btn btn-primary btn-sm"
-                            >
-                              Xem
-                            </Link>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th># 1735</th>
-                          <td>22/06/2013</td>
-                          <td>$ 150.00</td>
-                          <td>
-                            <span className="badge badge-info">
-                              Đang giao hàng
-                            </span>
-                          </td>
-                          <td>
-                            <Link
-                              to={`/order-detail`}
-                              className="btn btn-primary btn-sm"
-                            >
-                              Xem
-                            </Link>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th># 1735</th>
-                          <td>22/06/2013</td>
-                          <td>$ 150.00</td>
-                          <td>
-                            <span className="badge badge-success">
-                              Đã nhận hàng
-                            </span>
-                          </td>
-                          <td>
-                            <Link
-                              to={`/order-detail`}
-                              className="btn btn-primary btn-sm"
-                            >
-                              Xem
-                            </Link>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th># 1735</th>
-                          <td>22/06/2013</td>
-                          <td>$ 150.00</td>
-                          <td>
-                            <span className="badge badge-danger">Đã hủy</span>
-                          </td>
-                          <td>
-                            <Link
-                              to={`/order`}
-                              className="btn btn-primary btn-sm"
-                            >
-                              Xem
-                            </Link>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th># 1735</th>
-                          <td>22/06/2013</td>
-                          <td>$ 150.00</td>
-                          <td>
-                            <span className="badge badge-warning">
-                              Đang chuẩn bị hàng
-                            </span>
-                          </td>
-                          <td>
-                            <Link
-                              to={`/order`}
-                              className="btn btn-primary btn-sm"
-                            >
-                              Xem
-                            </Link>
-                          </td>
-                        </tr>
+                      <tbody style={{ textAlign: "center" }}>
+                        {allInvoice.map((item) => {
+                          return (
+                            <tr key={item.id}>
+                              <td>{item.id}</td>
+                              <td>{item.createdDate}</td>
+                              <td>{commas(item.grandTotal + "") + "₫"}</td>
+                              <td>
+                                {item.status === "Đang chuẩn bị hàng" && (
+                                  <span className="badge badge-warning">
+                                    {item.status}
+                                  </span>
+                                )}
+                                {item.status === "Đang giao hàng" && (
+                                  <span className="badge badge-info">
+                                    {item.status}
+                                  </span>
+                                )}
+                                {item.status === "Đã đặt hàng" && (
+                                  <span className="badge badge-success">
+                                    {item.status}
+                                  </span>
+                                )}
+                                {item.status === "Đã hủy" && (
+                                  <span className="badge badge-danger">
+                                    {item.status}
+                                  </span>
+                                )}
+                              </td>
+                              <td>
+                                {item.isPayment == false && (
+                                  <span className="badge badge-danger">
+                                    Chưa thanh toán
+                                  </span>
+                                )}
+                                {item.isPayment == true && (
+                                  <span className="badge badge-success">
+                                    Đã thanh toán
+                                  </span>
+                                )}
+                              </td>
+                              <td>
+                                <Link
+                                  to={`/order-detail/${item.id}`}
+                                  className="btn btn-info btn-sm"
+                                >
+                                  Xem
+                                </Link>
+                              </td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </table>
                   </div>

@@ -34,7 +34,7 @@ const Contact = () => {
                   </ol>
                 </nav>
               </div>
-              <div className="col-lg-3">
+              {/* <div className="col-lg-3">
                 <div className="card sidebar-menu mb-4">
                   <div className="card-header">
                     <h3 className="h4 card-title">Trang khác</h3>
@@ -59,17 +59,8 @@ const Contact = () => {
                     </ul>
                   </div>
                 </div>
-                <div className="banner">
-                  <a href="#">
-                    <img
-                      src="img/banner.jpg"
-                      alt="sales 2014"
-                      className="img-fluid"
-                    />
-                  </a>
-                </div>
-              </div>
-              <div className="col-lg-9">
+              </div> */}
+              <div className="col-lg-12">
                 <div id="contact" className="box">
                   <h1>Liên hệ</h1>
 
@@ -84,19 +75,16 @@ const Contact = () => {
                         <GiPositionMarker
                           className="fa fa-map-marker"
                           style={{ marginBottom: "-3px" }}
-                        >
-                          {" "}
-                        </GiPositionMarker>
+                        ></GiPositionMarker>{" "}
                         Địa chỉ
                       </h3>
-                      <p>
-                        SPKT
-                        <br /> 1 Vỗ Văn Ngân <br />
-                        Phường Linh Chiểu <br />
-                        Thành phố Thủ Đức
-                        <br />
-                        Thành phố Hồ Chí Minh
-                      </p>
+                      <ul>
+                        <li>SPKT</li>
+                        <li>1 Vỗ Văn Ngân</li>
+                        <li>Phường Linh Chiểu</li>
+                        <li>Thành phố Thủ Đức</li>
+                        <li>Thành phố Hồ Chí Minh</li>
+                      </ul>
                     </div>
                     <div className="col-md-4">
                       <h3>
@@ -106,10 +94,9 @@ const Contact = () => {
                         ></IoIosCall>{" "}
                         Liên lạc với số
                       </h3>
-
-                      <p>
-                        <strong>+ 33 555 444 333</strong>
-                      </p>
+                      <ul>
+                        <strong>0868690043</strong>
+                      </ul>
                     </div>
                     <div className="col-md-4">
                       <h3>
@@ -123,14 +110,8 @@ const Contact = () => {
                       <ul>
                         <li>
                           <strong>
-                            <a href="mailto:">info@fakeemail.com</a>
+                            <a href="mailto:">spkt@email.com</a>
                           </strong>
-                        </li>
-                        <li>
-                          <strong>
-                            <a href="#">Ticketio</a>
-                          </strong>{" "}
-                          - our ticketing support platform
                         </li>
                       </ul>
                     </div>

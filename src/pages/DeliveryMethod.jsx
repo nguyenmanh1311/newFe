@@ -10,6 +10,9 @@ import { GiPositionMarker } from "react-icons/gi";
 import { ImEye, ImTruck } from "react-icons/im";
 import { MdPayment } from "react-icons/md";
 
+import GHN from "../assets/images/delivery/GHN.png";
+import GHTK from "../assets/images/delivery/GHTK.png";
+
 const DeliveryMethod = () => {
   return (
     <>
@@ -30,7 +33,7 @@ const DeliveryMethod = () => {
                   </ol>
                 </nav>
               </div>
-              <div id="checkout" className="col-lg-9">
+              <div id="checkout" className="col-lg-12">
                 <div className="box">
                   <form method="get">
                     <h1>Phương thức vận chuyển</h1>
@@ -54,7 +57,7 @@ const DeliveryMethod = () => {
                       </Link>
 
                       <Link
-                        to={"/payment-method"}
+                        to={""}
                         className="nav-link flex-sm-fill text-sm-center disabled"
                       >
                         <MdPayment className="fa fa-money"> </MdPayment>
@@ -62,7 +65,7 @@ const DeliveryMethod = () => {
                       </Link>
 
                       <Link
-                        to={"/order-review"}
+                        to={""}
                         className="nav-link flex-sm-fill text-sm-center disabled"
                       >
                         <ImEye className="fa fa-eye"> </ImEye>
@@ -70,53 +73,43 @@ const DeliveryMethod = () => {
                       </Link>
                     </div>
                     <div className="row">
-                      <div className="col-md-6">
-                        <div className="box shipping-method">
-                          <h4>USPS Next Day</h4>
-                          <p>
-                            Get it right on next day - fastest option possible.
-                          </p>
-                          <div className="box-footer text-center">
+                      <div className="col-md-5">
+                        <div className="box-footer">
+                          <img
+                            style={{ width: "300px", height: "150px" }}
+                            src={GHN}
+                            alt=""
+                          />
+
+                          <div className="text-center d-flex align-items-center justify-content-center">
                             <input
                               type="radio"
                               name="delivery"
                               defaultValue="delivery1"
                             />
+                            <span> Giao hàng trong vòng 2 - 3 ngày</span>
                           </div>
                         </div>
                       </div>
-                      <div className="col-md-6">
-                        <div className="box shipping-method">
-                          <h4>USPS Next Day</h4>
-                          <p>
-                            Get it right on next day - fastest option possible.
-                          </p>
-                          <div className="box-footer text-center">
+                      <div className="col-md-5">
+                        <div className="box-footer">
+                          <img
+                            style={{ width: "300px", height: "150px" }}
+                            src={GHTK}
+                            alt=""
+                          />
+                          <div className="text-center d-flex align-items-center justify-content-center">
                             <input
                               type="radio"
                               name="delivery"
                               defaultValue="delivery2"
                             />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-md-6">
-                        <div className="box shipping-method">
-                          <h4>USPS Next Day</h4>
-                          <p>
-                            Get it right on next day - fastest option possible.
-                          </p>
-                          <div className="box-footer text-center">
-                            <input
-                              type="radio"
-                              name="delivery"
-                              defaultValue="delivery3"
-                            />
+                            <span> Giao hàng trong vòng 5 - 7 ngày</span>
                           </div>
                         </div>
                       </div>
                     </div>
-                    <div className="box-footer d-flex justify-content-between">
+                    <div className="d-flex justify-content-between">
                       <Link
                         to={`/check-address`}
                         className="btn btn-outline-secondary"

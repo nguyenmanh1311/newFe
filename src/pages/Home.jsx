@@ -25,7 +25,7 @@ const Home = () => {
   useEffect(() => {
     let isFetched = true;
     const fetchProductFeature = () => {
-      ProductService.getAllProduct().then((res) => {
+      ProductService.getAllTopSelling().then((res) => {
         if (isFetched) {
           setProductFeature(res.data);
         }
