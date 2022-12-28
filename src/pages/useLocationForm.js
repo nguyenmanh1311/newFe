@@ -62,7 +62,6 @@ async function fetchLocationOptions(fetchType, locationId) {
 async function fetchInitialData(userId) {
   let dataAddress;
   await AddressService.getAddressByID(userId).then((response) => {
-    console.log(response);
     dataAddress = response.data;
   });
   const { provinceId, districtId, wardId } = dataAddress;

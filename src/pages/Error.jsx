@@ -9,7 +9,6 @@ import { Link } from "react-router-dom";
 const Error = () => {
   return (
     <>
-      <Header />
       <div id="all">
         <div id="content">
           <div className="container">
@@ -21,7 +20,7 @@ const Error = () => {
                       <Link to="/">Trang chủ</Link>
                     </li>
                     <li aria-current="page" className="breadcrumb-item active">
-                      Trang không tìm thấy
+                      Sản phẩm không tìm thấy
                     </li>
                   </ol>
                 </nav>
@@ -31,9 +30,7 @@ const Error = () => {
                       <p className="text-center">
                         <img src={logo} alt="Obaju template" />
                       </p>
-                      <h3>
-                        Chúng tôi xin lỗi, trang của bạn hiện không tìm thấy.
-                      </h3>
+                      <h3>Chúng tôi xin lỗi, sản phẩm không tìm thấy.</h3>
                       <p className="text-center">
                         Vui lòng tiếp tục dùng <strong>form Tìm kiếm</strong>{" "}
                         hoặc <strong>Menu</strong> bên dưới.
@@ -55,7 +52,6 @@ const Error = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 };

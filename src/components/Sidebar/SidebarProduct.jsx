@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useRef } from "react";
 import { FaPenFancy } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useDataContext } from "../../context/DataProvider";
@@ -8,46 +9,57 @@ import { ProductService } from "../../services/product.service";
 import "../../styles/Style.scss";
 
 const SidebarProduct = ({ cateId }) => {
+  let isFetched = true;
   const [allBrand, setAllBrand] = useState([]);
   const [allCategory, setAllCategory] = useState([]);
-  const [allProduct, setAllProduct] = useState([]);
-  const [price, setPrice] = useState();
 
   const { setProductData } = useDataContext();
 
-  const handleInput = (e) => {
-    setPrice(e.target.value);
+  const [categories, setCategories] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(9999999999);
+  const minPriceRef = useRef();
+  const maxPriceRef = useRef();
+  const fetchshowAllProduct = () => {
+    const data = {
+      brandIds: brands,
+      categoryIds: categories,
+      maxPrice: maxPrice,
+      minPrice: minPrice,
+    };
+    ProductService.getProductByFilter(data).then((res) => {
+      if (res?.status === "OK") {
+        setProductData(res.data);
+      }
+    });
   };
+  useEffect(() => {
+    if (isFetched) {
+      fetchshowAllProduct();
+    }
+    return () => {
+      isFetched = false;
+    };
+  }, [categories, brands]);
 
   useEffect(() => {
-    let isFetched = true;
     const fetchshowAllCategory = () => {
       CategoryService.getAllCategory().then((res) => {
-        if (isFetched) {
-          setAllCategory(res.data);
-        }
+        setAllCategory(res.data);
       });
     };
 
     const fetchshowAllBrand = () => {
       BrandService.getAllBrand().then((res) => {
-        if (isFetched) {
-          setAllBrand(res.data);
-        }
+        setAllBrand(res.data);
       });
     };
+    if (isFetched) {
+      fetchshowAllBrand();
+      fetchshowAllCategory();
+    }
 
-    const fetchshowAllProduct = () => {
-      ProductService.getAllProduct().then((res) => {
-        if (isFetched) {
-          setAllProduct(res.data);
-        }
-      });
-    };
-
-    fetchshowAllProduct();
-    fetchshowAllBrand();
-    fetchshowAllCategory();
     return () => {
       isFetched = false;
     };
@@ -56,17 +68,20 @@ const SidebarProduct = ({ cateId }) => {
     categoryId: Number(cateId),
     branchId: null,
   };
-  const handleChange = (event) => {
-    if (event.target.checked) {
-      input.branchId = Number(event.target.value);
-    }
-    searchProduct();
-  };
-  const searchProduct = () => {
-    console.log(input);
-    ProductService.getProductByCateIdAndBrandId(input).then((res) => {
-      setProductData(res.data);
-      console.log(res.data);
+
+  const applyFilterPriceHandleClick = () => {
+    setMinPrice(Number(minPriceRef.current.value));
+    setMaxPrice(Number(maxPriceRef.current.value));
+    const data = {
+      brandIds: brands,
+      categoryIds: categories,
+      maxPrice: Number(maxPriceRef.current.value),
+      minPrice: Number(minPriceRef.current.value),
+    };
+    ProductService.getProductByFilter(data).then((res) => {
+      if (res?.status === "OK") {
+        setProductData(res.data);
+      }
     });
   };
   return (
@@ -79,26 +94,47 @@ const SidebarProduct = ({ cateId }) => {
           <ul className="nav nav-pills flex-column category-menu">
             <li>
               <Link to={``} className="nav-link">
-                Loại balo <span className="badge badge-secondary">9</span>
+                Loại balo{" "}
+                <span className="badge badge-secondary">
+                  {allCategory.length}
+                </span>
               </Link>
-              <ul className="list-unstyled">
+              <div className="form-group" style={{ paddingLeft: "16px" }}>
                 {allCategory.map((item) => {
                   return (
-                    <li key={item.id}>
-                      <Link
-                        to={`/product/category/${item.id}`}
-                        className="nav-link"
-                      >
+                    <div
+                      className="checkbox d-flex justify-content-start"
+                      key={item.id}
+                    >
+                      <label style={{ margin: 0, padding: "5px" }}>
+                        <input
+                          type="checkbox"
+                          value={item.id}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setCategories((pre) => {
+                                return [...pre, Number(e.target.value)];
+                              });
+                            } else {
+                              setCategories((pre) => {
+                                return pre.filter(
+                                  (item) => item !== Number(e.target.value)
+                                );
+                              });
+                            }
+                          }}
+                        />{" "}
                         {item.name}
-                      </Link>
-                    </li>
+                      </label>
+                    </div>
                   );
                 })}
-              </ul>
+              </div>
             </li>
             <li>
               <Link to={``} className="nav-link">
-                Thương hiệu <span className="badge badge-secondary">15</span>
+                Thương hiệu{" "}
+                <span className="badge badge-secondary">{allBrand.length}</span>
               </Link>
               <div>
                 <div className="form-group" style={{ paddingLeft: "16px" }}>
@@ -108,16 +144,27 @@ const SidebarProduct = ({ cateId }) => {
                         className="checkbox d-flex justify-content-start"
                         key={item.id}
                       >
-                        <input
-                          type="checkbox"
-                          id="namePro"
-                          value={item.id}
-                          onChange={handleChange}
-                        />
                         <label
-                          htmlFor="namePro"
+                          className="d-flex align-items-center"
                           style={{ margin: 0, padding: "5px" }}
                         >
+                          <input
+                            type="checkbox"
+                            value={item.id}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setBrands((pre) => {
+                                  return [...pre, Number(e.target.value)];
+                                });
+                              } else {
+                                setBrands((pre) => {
+                                  return pre.filter(
+                                    (item) => item !== Number(e.target.value)
+                                  );
+                                });
+                              }
+                            }}
+                          />{" "}
                           {item.name}
                         </label>
                       </div>
@@ -128,17 +175,26 @@ const SidebarProduct = ({ cateId }) => {
                   <Link to={``} className="nav-link">
                     Giá
                   </Link>
-                  <input type="range" onInput={handleInput} />
-                  <div>
-                    {allProduct
-                      .filter((product) => {
-                        return product.price > parseInt(price, 10);
-                      })
-                      .map((product) => {
-                        return <p>{product.price}</p>;
-                      })}
+                  <div className="row d-flex justify-content-around ">
+                    <input
+                      style={{ marginLeft: "20px" }}
+                      className="col-lg-4"
+                      type="number"
+                      ref={minPriceRef}
+                    />
+                    {"-"}
+                    <input
+                      style={{ marginRight: "20px" }}
+                      className="col-lg-4"
+                      type="number"
+                      ref={maxPriceRef}
+                    />
                   </div>
-                  <button className="btn btn-default btn-sm btn-primary">
+                  <br />
+                  <button
+                    className="btn btn-default btn-sm btn-primary"
+                    onClick={applyFilterPriceHandleClick}
+                  >
                     <FaPenFancy
                       className="fa fa-pencil"
                       style={{ marginBottom: "-2px" }}

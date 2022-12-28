@@ -363,10 +363,6 @@ h1 {
   .menu-brand {
     left: inherit;
   }
-
-  .menu-new {
-    left: inherit;
-  }
 }
 
 .navbar .megamenu {
@@ -636,12 +632,12 @@ h1 {
   text-align: center;
   -webkit-transition: all 0.3s;
   transition: all 0.3s;
-  vertical-align: bottom;
+  vertical-align: middle;
   background-color: #555;
 }
 
 #footer .social a i {
-  vertical-align: bottom;
+  vertical-align: middle;
   line-height: 30px;
 }
 
@@ -873,7 +869,7 @@ h1 {
   width: 15px;
   height: 15px;
   border: solid 1px #555;
-  vertical-align: top;
+  vertical-align: middle;
   margin-top: 2px;
   margin-left: 5px;
 }
@@ -1190,11 +1186,11 @@ h1 {
   text-align: center;
   -webkit-transition: all 0.3s;
   transition: all 0.3s;
-  vertical-align: bottom;
+  vertical-align: middle;
 }
 
 #content #details .social p a i {
-  vertical-align: bottom;
+  vertical-align: middle;
   line-height: 26px;
 }
 
@@ -1464,7 +1460,7 @@ h1 {
 
 #content #customer-orders table tr th,
 #content #customer-orders table tr td {
-  vertical-align: baseline;
+  vertical-align: middle;
 }
 
 #content #customer-order .table tfoot th {

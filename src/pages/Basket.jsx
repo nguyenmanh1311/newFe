@@ -18,7 +18,8 @@ const Basket = () => {
     return str.replace(/.(?=(?:.{3})+$)/g, "$&.");
   };
   const [cartDetail, setCartDetail] = useState([]);
-  const [statusCart, setStatusCart] = useState(false);
+  const [statusCart, setStatusCart] = useState(true);
+
   let total = 0;
   const navigate = useNavigate();
 
@@ -26,15 +27,20 @@ const Basket = () => {
     const userId = JSON.parse(localStorage.getItem("userId"));
     let isFetched = true;
 
+    if (localStorage.getItem("accessToken") == null) {
+      navigate("/login");
+    }
+
     const fetchCart = () => {
       CartService.getCartId(userId).then((res) => {
         if (isFetched) {
           CartService.calTotalPriceCart(res.data.id);
           CartService.getAllCartDetailByCartID(res.data.id).then((res) => {
             if (isFetched) {
-              if (res.data != null) {
-                setStatusCart(true);
-                setCartDetail(res.data ? res.data : []);
+              if (res.data == null) {
+                setStatusCart(false);
+              } else {
+                setCartDetail(res.data ?? []);
               }
             }
           });
@@ -42,6 +48,7 @@ const Basket = () => {
       });
     };
     fetchCart();
+
     return () => {
       isFetched = false;
     };
@@ -53,6 +60,7 @@ const Basket = () => {
     CartService.updateQuantity(dataUpdate);
     window.location.reload();
   };
+
   return (
     <>
       <Header />
@@ -72,7 +80,7 @@ const Basket = () => {
                   </ol>
                 </nav>
               </div>
-              {!statusCart && (
+              {!statusCart ? (
                 <div id="basket" className="col-lg-12">
                   <div className="box">
                     <h1>Giỏ hàng</h1>
@@ -98,6 +106,7 @@ const Basket = () => {
                         padding: "10px",
                         borderRadius: "10px",
                       }}
+                      className="btn btn-secondary"
                       onClick={() => {
                         navigate("/");
                       }}
@@ -106,16 +115,23 @@ const Basket = () => {
                     </button>
                   </div>
                 </div>
-              )}
-
-              {statusCart && (
+              ) : (
                 <div id="basket" className="col-lg-12">
                   <div className="box">
                     <form>
-                      <h1>Giỏ hàng</h1>
-                      <p className="text-muted">
-                        Hiện tại, bạn có 3 sản phẩm trong giỏ.
-                      </p>
+                      <div
+                        className="font-weight-bold text-danger"
+                        style={{ fontSize: "30px", marginBottom: "10px" }}
+                      >
+                        GIỎ HÀNG
+                      </div>
+                      <h3
+                        className="font-weight-bold text-info"
+                        style={{ marginBottom: "20px" }}
+                      >
+                        Hiện tại, bạn có {cartDetail.length ?? null} sản phẩm
+                        trong giỏ.
+                      </h3>
                       <div className="table-responsive">
                         <table className="table">
                           <thead>
@@ -125,6 +141,7 @@ const Basket = () => {
                               <th>Đơn giá</th>
                               <th>Khuyến mãi</th>
                               <th>Tổng</th>
+                              <th></th>
                             </tr>
                           </thead>
                           <tbody>
@@ -200,9 +217,7 @@ const Basket = () => {
                                             );
                                             CartService.deleteCartDetailById(
                                               item.id
-                                            ).then((res) => {
-                                              console.log(res);
-                                            });
+                                            ).then((res) => {});
                                             window.location.reload();
                                           } else if (result.isDenied) {
                                             Swal.fire(
@@ -238,6 +253,7 @@ const Basket = () => {
                           <Link
                             to={`/collections`}
                             className="btn btn-outline-secondary"
+                            style={{ fontSize: "14px" }}
                           >
                             <GrPrevious
                               className="fa fa-chevron-left"
@@ -251,6 +267,7 @@ const Basket = () => {
                           <Link
                             to={`/check-address`}
                             className="btn btn-outline-secondary"
+                            style={{ fontSize: "14px" }}
                           >
                             Tiến hành thanh toán{" "}
                             <GrNext

@@ -64,7 +64,10 @@ const Contact = () => {
                 <div id="contact" className="box">
                   <h1>Liên hệ</h1>
 
-                  <p>
+                  <p
+                    className="d-flex justify-content-center"
+                    style={{ fontSize: "14px" }}
+                  >
                     Xin vui lòng liên hệ với chúng tôi, trung tâm dịch vụ chăm
                     sóc khách hàng của chúng tôi đang làm việc cho bạn 24/7.
                   </p>
@@ -78,13 +81,13 @@ const Contact = () => {
                         ></GiPositionMarker>{" "}
                         Địa chỉ
                       </h3>
-                      <ul>
-                        <li>SPKT</li>
-                        <li>1 Vỗ Văn Ngân</li>
-                        <li>Phường Linh Chiểu</li>
-                        <li>Thành phố Thủ Đức</li>
-                        <li>Thành phố Hồ Chí Minh</li>
-                      </ul>
+                      <div className="text-center">
+                        <div className="d-flex justify-content-center">
+                          SPKT, 1 Võ Văn Ngân, Phường Linh Chiểu,
+                          <br />
+                          Thành phố Thủ Đức, Thành phố Hồ Chí Minh
+                        </div>
+                      </div>
                     </div>
                     <div className="col-md-4">
                       <h3>
@@ -94,9 +97,9 @@ const Contact = () => {
                         ></IoIosCall>{" "}
                         Liên lạc với số
                       </h3>
-                      <ul>
+                      <div className="d-flex justify-content-center">
                         <strong>0868690043</strong>
-                      </ul>
+                      </div>
                     </div>
                     <div className="col-md-4">
                       <h3>
@@ -107,13 +110,11 @@ const Contact = () => {
                         Gửi thư điện tử
                       </h3>
 
-                      <ul>
-                        <li>
-                          <strong>
-                            <a href="mailto:">spkt@email.com</a>
-                          </strong>
-                        </li>
-                      </ul>
+                      <div className="d-flex justify-content-center">
+                        <strong>
+                          <a href="mailto:">spkt@email.com</a>
+                        </strong>
+                      </div>
                     </div>
                   </div>
                   <hr />
@@ -130,8 +131,8 @@ const Contact = () => {
                   ></iframe>
                   <br />
                   <hr />
-                  <h2>Contact form</h2>
-                  <form>
+                  <h2>Phiếu liên lạc</h2>
+                  <form style={{ fontSize: "14px" }}>
                     <div className="row">
                       <div className="col-md-12">
                         <div className="form-group">
@@ -174,7 +175,11 @@ const Contact = () => {
                         </div>
                       </div>
                       <div className="col-md-12 text-center">
-                        <button type="submit" className="btn btn-primary">
+                        <button
+                          type="submit"
+                          className="btn btn-primary"
+                          style={{ fontSize: "14px" }}
+                        >
                           <FiMail
                             className="fa fa-envelope-o"
                             style={{ marginBottom: "-3px" }}

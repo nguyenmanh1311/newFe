@@ -1,13 +1,15 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import Footer from "../components/Footer/Footer";
-import Header from "../components/Header/Header";
-import SidebarCustomer from "../components/Sidebar/SidebarCustomer";
-import { InvoiceService } from "../services/invoice.service";
+import { Link, useNavigate } from "react-router-dom";
+import Footer from "../../components/Footer/Footer";
+import Header from "../../components/Header/Header";
+import SidebarCustomer from "../../components/Sidebar/SidebarCustomer";
+import { InvoiceService } from "../../services/invoice.service";
 
 const AllOrder = () => {
   const [allInvoice, setAllInvoice] = useState([]);
+  const navigate = useNavigate();
+
   const commas = (str) => {
     return str.replace(/.(?=(?:.{3})+$)/g, "$&.");
   };
@@ -27,6 +29,10 @@ const AllOrder = () => {
       isFetched = false;
     };
   }, []);
+
+  if (localStorage.getItem("accessToken") === null) {
+    navigate("/login");
+  }
   return (
     <>
       <Header />

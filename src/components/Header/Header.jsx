@@ -42,6 +42,7 @@ const Header = () => {
   const searchItems = (searchValue) => {
     setSearchInput(searchValue);
   };
+
   const handleKeyDown = (event) => {
     if (
       event.key === "Enter" &&
@@ -51,12 +52,21 @@ const Header = () => {
       navigate(`/search/${searchInput}`);
     }
   };
+
   const onClickSearch = () => {
     if (
       searchInput.toString().trim() !== "" &&
       searchInput.toString().trim() !== null
     ) {
       navigate(`/search/${searchInput}`);
+    }
+  };
+
+  const onClickBasket = () => {
+    if (localStorage.getItem("accessToken") == null) {
+      navigate("/login");
+    } else {
+      navigate("/basket");
     }
   };
 
@@ -81,9 +91,7 @@ const Header = () => {
     const fetchUser = () => {
       UserService.getUserByUserID(userId).then((res) => {
         if (isFetched) {
-          if (res.data != null) {
-            setUser(res.data);
-          }
+          setUser(res.data);
         }
       });
     };
@@ -118,7 +126,7 @@ const Header = () => {
 
               <li className="nav-item dropdown menu-large">
                 <Link
-                  to="/collections"
+                  to="/product"
                   data-toggle="dropdown"
                   data-hover="dropdown"
                   data-delay="200"
@@ -149,7 +157,7 @@ const Header = () => {
               </li>
               <li className="nav-item dropdown menu-large">
                 <Link
-                  to="/collections"
+                  to="/product"
                   data-toggle="dropdown"
                   data-hover="dropdown"
                   data-delay="200"
@@ -210,8 +218,9 @@ const Header = () => {
               <div
                 id="basket-overview"
                 className="navbar-collapse collapse d-none d-lg-block"
+                onClick={onClickBasket}
               >
-                <Link to={`/basket`} className="btn btn-secondary navbar-btn">
+                <Link to={""} className="btn btn-secondary navbar-btn">
                   <FaShoppingCart
                     className="fa fa-shopping-cart"
                     style={{ marginBottom: "-2px" }}
@@ -261,13 +270,13 @@ const Header = () => {
                           "http://localhost:8080/api/v1/image_product/" +
                           user.photo
                         }
-                        class="rounded-circle "
+                        className="rounded-circle "
                         style={{ height: "30px" }}
                         alt="..."
                       />
                     </div>
                     <div
-                      className="dropdown-menu"
+                      className="dropdown-menu menu-account megamenu"
                       aria-labelledby="dropdownMenuButton"
                     >
                       <Link to={"/account"} className="dropdown-item">

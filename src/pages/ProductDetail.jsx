@@ -212,7 +212,7 @@ const ProductDetail = () => {
                       </div>
                     </div>
                   </div>
-                  <hr />
+                  {/* <hr />
                   <div className="social">
                     <h4>Chia sẻ cho bạn bè</h4>
                     <p className="d-flex justify-content-center">
@@ -241,7 +241,7 @@ const ProductDetail = () => {
                         ></SiGmail>
                       </a>
                     </p>
-                  </div>
+                  </div> */}
                 </div>
                 <div style={{ marginBottom: "30px", marginTop: "60px" }}>
                   <h3>Sản phẩm liên quan</h3>

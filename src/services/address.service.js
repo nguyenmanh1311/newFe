@@ -71,6 +71,14 @@ const updateAddress = (data, id) => {
     });
 };
 
+const deleteAddress = (id) => {
+  return axios
+    .delete(`${configAPI.baseUrlApi}/api/v1/address/${id}`)
+    .then((res) => {
+      return res.data;
+    });
+};
+
 export const AddressService = {
   getProvince,
   getDistrict,
@@ -79,4 +87,5 @@ export const AddressService = {
   getAddressByID,
   createAddress,
   updateAddress,
+  deleteAddress,
 };

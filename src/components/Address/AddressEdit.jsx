@@ -7,6 +7,7 @@ import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
 import SidebarCustomer from "../Sidebar/SidebarCustomer";
 import useLocationForm from "./useLocationForm";
+import Swal from "sweetalert2";
 
 function AddressEdit() {
   const { id } = useParams();
@@ -57,12 +58,11 @@ function AddressEdit() {
       districtId: district?.value ? district?.value : selectedDistrict?.value,
       wardId: ward?.value ? ward?.value : selectedWard?.value,
     };
-    console.log(updateData);
     AddressService.updateAddress(updateData, id).then((response) => {
       if (response.status === "OK") {
         navigate(-1);
       } else {
-        alert("Error");
+        Swal.fire("Cập nhật địa chỉ không thành công", "Thông báo", "warning");
       }
     });
   };

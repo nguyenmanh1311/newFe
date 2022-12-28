@@ -23,7 +23,6 @@ const Login = () => {
   const navigate = useNavigate();
   const loginOnclick = async () => {
     await AuthService.login(usernameLogin, passwordLogin).then((response) => {
-      console.log(response);
       if (
         response.status === "UNAUTHORIZED" ||
         response.status === "BAD_REQUEST"

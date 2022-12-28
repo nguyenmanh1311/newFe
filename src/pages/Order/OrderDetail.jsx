@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import SidebarCustomer from "../components/Sidebar/SidebarCustomer";
-import Header from "../components/Header/Header";
-import Footer from "../components/Footer/Footer";
-import "../styles/Style.scss";
-import { InvoiceDetailService } from "../services/invoiceDetail.service";
-import { AddressService } from "../services/address.service";
+import SidebarCustomer from "../../components/Sidebar/SidebarCustomer";
+import Header from "../../components/Header/Header";
+import Footer from "../../components/Footer/Footer";
+import "../../styles/Style.scss";
+import { InvoiceDetailService } from "../../services/invoiceDetail.service";
+import { AddressService } from "../../services/address.service";
+import { InvoiceService } from "../../services/invoice.service";
 
 const Order = () => {
   const commas = (str) => {
@@ -27,14 +28,16 @@ const Order = () => {
         }
       });
     };
-    const fetchAddress = () => {
-      AddressService.getAddressByUserID(userId).then((res) => {
+    const fetchInvoice = () => {
+      InvoiceService.getInvoiceByInvoiceId(id).then((res) => {
         if (isFetched) {
-          setAddress(res?.data[0]);
+          AddressService.getAddressByID(res.data.addressId ?? 0).then((res) => {
+            setAddress(res.data);
+          });
         }
       });
     };
-    fetchAddress();
+    fetchInvoice();
 
     fetchInvoiceDetail();
     return () => {

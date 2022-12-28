@@ -1,30 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "../styles/Style.scss";
-import Select from "react-select";
 
 import Footer from "../components/Footer/Footer";
 import Header from "../components/Header/Header";
 
 import { RiSave3Fill } from "react-icons/ri";
 import SidebarCustomer from "../components/Sidebar/SidebarCustomer";
-import { Link } from "react-router-dom";
-import { AddressService } from "../services/address.service";
-import { useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthService } from "../services/auth.service";
 import swal from "sweetalert2";
-import useLocationForm from "./useLocationForm";
 
 const Account = () => {
-  const [address, setAddress] = useState();
-  const [isUpdate, setIsUpdate] = useState(false);
-
   const [oldPass, setOldPasss] = useState("");
   const [newPass, setNewPasss] = useState("");
   const [confirmPass, setConfirmPasss] = useState("");
   const userId = JSON.parse(localStorage.getItem("userId"));
+  const navigate = useNavigate();
 
   const saveOnClick = () => {
-    if (newPass == confirmPass) {
+    if (newPass === confirmPass) {
       AuthService.changePassword(userId, oldPass, newPass).then((res) => {
         if (res.status === "OK") {
           swal.fire("Thông báo", "Đổi mật khẩu thành công", "success");
@@ -38,39 +32,9 @@ const Account = () => {
     }
   };
 
-  useEffect(() => {
-    const userId = JSON.parse(localStorage.getItem("userId"));
-    let isFetched = true;
-    const fetchAddress = () => {
-      AddressService.getAddressByUserID(userId).then((res) => {
-        console.log(res?.data[0]);
-        setAddress(res?.data[0]);
-      });
-    };
-
-    fetchAddress();
-    return () => {
-      isFetched = false;
-    };
-  }, []);
-
-  const { state, onCitySelect, onDistrictSelect, onWardSelect } =
-    useLocationForm(
-      true,
-      Number(JSON.parse(localStorage.getItem("idAddress")))
-    );
-
-  const {
-    cityOptions,
-    districtOptions,
-    wardOptions,
-    selectedCity,
-    selectedDistrict,
-    selectedWard,
-  } = state;
-  const [province, setProvince] = useState(selectedCity);
-  const [district, setDistrict] = useState(selectedDistrict);
-  const [ward, setWard] = useState(selectedWard);
+  if (localStorage.getItem("accessToken") === null) {
+    navigate("/login");
+  }
 
   return (
     <>
@@ -99,7 +63,7 @@ const Account = () => {
 
                   <form>
                     <div className="row">
-                      <div className="col-md-12">
+                      <div className="col-md-6">
                         <div className="form-group">
                           <label htmlFor="fullname">Họ và tên</label>
                           <input
@@ -121,6 +85,8 @@ const Account = () => {
                           />
                         </div>
                       </div>
+                    </div>
+                    <div className="row">
                       <div className="col-md-6">
                         <div className="form-group">
                           <label htmlFor="email">Email</label>

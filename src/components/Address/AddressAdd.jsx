@@ -1,10 +1,11 @@
 import React, { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import Select from "react-select";
 import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
-import SidebarCustomer from "../Sidebar/SidebarCustomer";
-import Select from "react-select";
 import useLocationForm from "./useLocationForm";
+import SidebarCustomer from "../Sidebar/SidebarCustomer";
 import { AddressService } from "../../services/address.service";
 
 const AddressAdd = () => {
@@ -44,12 +45,11 @@ const AddressAdd = () => {
       wardId: ward?.value ? ward?.value : selectedWard?.value,
       userId: user,
     };
-    console.log(createData);
     AddressService.createAddress(createData).then((response) => {
       if (response.status === "OK") {
         navigate(-1);
       } else {
-        alert("Error");
+        Swal.fire("Tạo địa chỉ không thành công", "Thông báo", "warning");
       }
     });
   };

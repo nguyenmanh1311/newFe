@@ -1,18 +1,22 @@
-import React from "react";
-import { useSearchParams, Navigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { InvoiceService } from "../services/invoice.service";
 // import { axiosInstance } from "../../../Admin/src/api/axios.config";
 
 const PaymentResolve = () => {
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  if (Number(searchParams.get("resultCode")) === 0) {
+  useEffect(() => {
     const invoiceId = Number(searchParams.get("extraData"));
-    // axiosInstance.put("url/" + invoiceId).then((res) => {
-    //   if (res.status === "OK") {
-    //     return <Navigate to="/" />;
-    //   }
-    // });
-  }
-  return <Navigate to="/fail" />;
+    if (Number(searchParams.get("resultCode")) === 0) {
+      InvoiceService.updatePaymentStatus(invoiceId).then(() => {
+        setTimeout(navigate("/payment/success"), 1000);
+      });
+    } else {
+      InvoiceService.cancelInvoice(invoiceId);
+      setTimeout(navigate("/payment/fail"), 1000);
+    }
+  }, []);
 };
 
 export default PaymentResolve;

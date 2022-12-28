@@ -85,6 +85,14 @@ const get4RelateProduct = (idProduct) => {
     });
 };
 
+const getProductByFilter = (data) => {
+  return axios
+    .post(`${configAPI.baseUrlApi}/api/v1/product/filter`, data)
+    .then((response) => {
+      return response.data;
+    });
+};
+
 export const ProductService = {
   getAllProduct,
   get8ProductNew,
@@ -97,4 +105,5 @@ export const ProductService = {
   getProductByCateIdAndBrandId,
   get4RelateProduct,
   getAllTopSelling,
+  getProductByFilter,
 };
